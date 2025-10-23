@@ -23,4 +23,12 @@ app.get('/health', () => {
 
 app.register(getRoomsRoute)
 
-app.listen({ port: env.PORT })
+app
+  .listen({ port: env.PORT })
+  .then(() => {
+    console.log(`🚀 HTTP server running on http://localhost:${env.PORT}`)
+  })
+  .catch((err) => {
+    console.error('❌ Error starting server:', err)
+    process.exit(1)
+  })

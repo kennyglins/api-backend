@@ -1,65 +1,83 @@
-# 🧠 NLW AGENTS
+# NLW Agents
 
-API backend do **NLW AGENTS**, uma aplicação inspirada no projeto *LetMeAsk* da Rocketseat.  
-Desenvolvida com **Node.js**, **Fastify** e **TypeScript**, esta API gerencia as rotas e a comunicação com o banco de dados **PostgreSQL**, containerizado via **Docker**.
+Projeto desenvolvido durante o evento NLW (Next Level Week) da Rocketseat, focado em agentes de IA.
 
----
+## 🚀 Tecnologias
 
-## 🚀 Tecnologias utilizadas
+- **Node.js** - Runtime JavaScript
+- **TypeScript** - Tipagem estática
+- **Fastify** - Framework web rápido
+- **Drizzle ORM** - ORM type-safe para PostgreSQL
+- **PostgreSQL** - Banco de dados relacional
+- **Zod** - Validação de schemas
+- **Docker** - Containerização
 
-- **Node.js** — runtime JavaScript
-- **Fastify** — framework backend leve e performático
-- **TypeScript** — tipagem estática para maior segurança
-- **PostgreSQL** — banco de dados relacional
-- **Docker** — containerização e ambiente isolado
-- **Drizzle ORM** 
-- **Zod** 
+## 📋 Pré-requisitos
 
----
+- Node.js 18+
+- Docker e Docker Compose
+- npm ou yarn
 
-## ⚙️ Como executar o projeto
+## ⚙️ Configuração
 
-### 1️⃣ Clonar o repositório
-
+1. Clone o repositório
+2. Instale as dependências:
 ```bash
-git clone https://github.com/seu-usuario/nlw-agents.git
-cd nlw-agents
-```
-
-2️⃣ Configurar variáveis de ambiente
-
-Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
-
-```
-PORT=3333
-DATABASE_URL="postgresql://docker:docker@localhost:5432/agents"
-```
-
-
-⚠️ Lembre-se de ajustar o nome do banco (agents) caso utilize outro no seu docker-compose.yml.
-
-3️⃣ Executar com Docker
-
-Suba os containers do projeto:
-
-```
-docker-compose up
-```
-
-Isso irá iniciar o banco de dados PostgreSQL e o servidor Fastify simultaneamente.
-
-4️⃣ Rodar localmente (sem Docker)
-
-Caso prefira executar localmente:
-
-```
 npm install
+```
+
+3. Configure as variáveis de ambiente criando um arquivo `.env`:
+```env
+PORT=3333
+DATABASE_URL=postgresql://docker:docker@localhost:5432/agents
+```
+
+4. Inicie o banco de dados com Docker:
+```bash
+docker-compose up -d
+```
+
+5. Execute as migrações do banco:
+```bash
+npm drizzle-kit migrate
+```
+6. Popule o banco com dados de exemplo:
+```bash
+npm run db:seed
+```
+
+## 🏃‍♂️ Executando
+
+**Desenvolvimento:**
+```bash
 npm run dev
 ```
 
-O servidor estará rodando em:
-👉 http://localhost:3333
+**Produção:**
+```bash
+npm start
+```
 
-📄 Licença
+O servidor estará disponível em `http://localhost:3333`
 
-Este projeto está sob a licença MIT.
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── db/
+│   ├── connection.ts    # Configuração do banco
+│   ├── migrations/      # Migrações do Drizzle
+│   └── schema/          # Schemas do banco
+├── http/
+│   └── routes/          # Rotas da API
+├── env.ts              # Validação de variáveis
+└── server.ts           # Servidor principal
+```
+
+## 🛠️ Padrões Utilizados
+
+- **Clean Architecture** - Separação de responsabilidades
+- **Type Safety** - Validação com Zod e TypeScript
+- **ORM Type-Safe** - Drizzle ORM com schemas tipados
+- **Environment Validation** - Validação de variáveis de ambiente
+- **Plugin Pattern** - Rotas como plugins do Fastify
