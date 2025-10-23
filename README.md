@@ -12,7 +12,8 @@ Desenvolvida com **Node.js**, **Fastify** e **TypeScript**, esta API gerencia as
 - **TypeScript** — tipagem estática para maior segurança
 - **PostgreSQL** — banco de dados relacional
 - **Docker** — containerização e ambiente isolado
-- **Dotenv** — gerenciamento de variáveis de ambiente
+- **Drizzle ORM** 
+- **Zod** 
 
 ---
 
