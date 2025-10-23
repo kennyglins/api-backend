@@ -23,13 +23,16 @@ Desenvolvida com **Node.js**, **Fastify** e **TypeScript**, esta API gerencia as
 ```bash
 git clone https://github.com/seu-usuario/askly-api.git
 cd askly-api
+```
 
 2️⃣ Configurar variáveis de ambiente
 
 Crie um arquivo .env na raiz do projeto com o seguinte conteúdo:
 
+```
 PORT=3333
 DATABASE_URL="postgresql://docker:docker@localhost:5432/agents"
+```
 
 
 ⚠️ Lembre-se de ajustar o nome do banco (agents) caso utilize outro no seu docker-compose.yml.
@@ -38,8 +41,9 @@ DATABASE_URL="postgresql://docker:docker@localhost:5432/agents"
 
 Suba os containers do projeto:
 
+```
 docker-compose up
-
+```
 
 Isso irá iniciar o banco de dados PostgreSQL e o servidor Fastify simultaneamente.
 
@@ -47,9 +51,10 @@ Isso irá iniciar o banco de dados PostgreSQL e o servidor Fastify simultaneamen
 
 Caso prefira executar localmente:
 
+```
 npm install
 npm run dev
-
+```
 
 O servidor estará rodando em:
 👉 http://localhost:3333
