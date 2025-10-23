@@ -1,6 +1,6 @@
-# 🧠 Askly API
+# 🧠 NLW AGENTS
 
-API backend do **Askly**, uma aplicação inspirada no projeto *LetMeAsk* da Rocketseat.  
+API backend do **NLW AGENTS**, uma aplicação inspirada no projeto *LetMeAsk* da Rocketseat.  
 Desenvolvida com **Node.js**, **Fastify** e **TypeScript**, esta API gerencia as rotas e a comunicação com o banco de dados **PostgreSQL**, containerizado via **Docker**.
 
 ---
@@ -21,8 +21,8 @@ Desenvolvida com **Node.js**, **Fastify** e **TypeScript**, esta API gerencia as
 ### 1️⃣ Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/askly-api.git
-cd askly-api
+git clone https://github.com/seu-usuario/nlw-agents.git
+cd nlw-agents
 ```
 
 2️⃣ Configurar variáveis de ambiente
