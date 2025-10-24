@@ -8,6 +8,13 @@
       "when": 1761166952690,
       "tag": "0000_mean_thanos",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1761320400901,
+      "tag": "0001_bored_krista_starr",
+      "breakpoints": true
     }
   ]
 }
