@@ -1,60 +1,85 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 import { env } from '../env.ts'
 
-// Inicializa o cliente Gemini com a chave da API
-const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
+const gemini = new GoogleGenAI({
+  apiKey: env.GEMINI_API_KEY,
+})
 
-/**
- * Gera uma resposta textual baseada em um prompt.
- */
-export async function generateAnswer(prompt: string) {
-  try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-    const result = await model.generateContent(prompt)
-    return result.response.text()
-  } catch (error) {
-    console.error('❌ Erro ao gerar resposta com Gemini:', error)
-    return 'Erro ao gerar resposta com a IA.'
-  }
-}
+const model = 'gemini-2.5-flash'
 
-/**
- * Gera embeddings (vetores numéricos) a partir de um texto.
- */
-export async function generateEmbeddings(input: string) {
-  try {
-    const model = genAI.getGenerativeModel({ model: 'text-embedding-004' })
-    const result = await model.embedContent(input)
-    return result.embedding.values
-  } catch (error) {
-    console.error('❌ Erro ao gerar embeddings com Gemini:', error)
-    return []
-  }
-}
-
-/**
- * Transcreve um áudio (em base64) para texto usando o modelo Gemini 2.5 Flash.
- * Ideal para áudios curtos, como mensagens de voz.
- */
-export async function transcribeAudio(base64Audio: string, mimeType: string) {
-  try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
-
-    const result = await model.generateContent([
+export async function transcribeAudio(audioAsBase64: string, mimeType: string) {
+  const response = await gemini.models.generateContent({
+    model,
+    contents: [
+      {
+        text: 'Transcreva o áudio para português do Brasil. Seja preciso e natural na transcrição. Mantenha a pontuação adequada e divida o texto em parágrafos quando for apropriado.',
+      },
       {
         inlineData: {
           mimeType,
-          data: base64Audio,
+          data: audioAsBase64,
         },
       },
-      {
-        text: 'Transcreva o áudio com clareza, pontuação e correção gramatical.',
-      },
-    ])
+    ],
+  })
 
-    return result.response.text()
-  } catch (error) {
-    console.error('❌ Erro ao transcrever áudio com Gemini:', error)
-    return 'Erro ao transcrever áudio.'
+  if (!response.text) {
+    throw new Error('Não foi possível converter o áudio')
   }
+
+  return response.text
+}
+
+export async function generateEmbeddings(text: string) {
+  const response = await gemini.models.embedContent({
+    model: 'text-embedding-004',
+    contents: [{ text }],
+    config: {
+      taskType: 'RETRIEVAL_DOCUMENT',
+    },
+  })
+
+  if (!response.embeddings?.[0].values) {
+    throw new Error('Não foi possível gerar os embeddings.')
+  }
+
+  return response.embeddings[0].values
+}
+
+export async function generateAnswer(
+  question: string,
+  transcriptions: string[]
+) {
+  const context = transcriptions.join('\n\n')
+
+  const prompt = `
+    Com base no texto fornecido abaixo como contexto, responda a pergunta de forma clara e precisa em português do Brasil.
+  
+    CONTEXTO:
+    ${context}
+
+    PERGUNTA:
+    ${question}
+
+    INSTRUÇÕES:
+    - Seja objetivo;
+    - Mantenha um tom educativo e profissional;
+    - Cite trechos relevantes do contexto se apropriado;
+    - Se for citar o contexto, utilize o temo "conteúdo da aula";
+  `.trim()
+
+  const response = await gemini.models.generateContent({
+    model,
+    contents: [
+      {
+        text: prompt,
+      },
+    ],
+  })
+
+  if (!response.text) {
+    throw new Error('Falha ao gerar resposta pelo Gemini')
+  }
+
+  return response.text
 }

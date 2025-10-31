@@ -6,13 +6,6 @@ const envSchema = z.object({
   GEMINI_API_KEY: z.string(),
 })
 
-const parsed = envSchema.safeParse(process.env)
+export const env = envSchema.parse(process.env)
 
-if (!parsed.success) {
-  console.error('❌ Erro ao validar variáveis de ambiente:')
-  console.error(parsed.error.flatten().fieldErrors)
-  throw new Error('Falha ao carregar variáveis de ambiente.')
-}
-
-export const env = parsed.data
-export const { PORT, DATABASE_URL, GEMINI_API_KEY } = parsed.data
+env.PORT
