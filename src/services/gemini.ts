@@ -1,17 +1,33 @@
-import { z } from 'zod'
+import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GEMINI_API_KEY } from '../env.js'
 
-const envSchema = z.object({
-  PORT: z.coerce.number().default(3333),
-  DATABASE_URL: z.string().url().startsWith('postgresql://'),
-  GEMINI_API_KEY: z.string(),
-})
+// Inicializa o cliente Gemini com a chave da API
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
 
-const parsed = envSchema.safeParse(process.env)
-
-if (!parsed.success) {
-  console.error('❌ Erro ao validar variáveis de ambiente:')
-  console.error(parsed.error.flatten().fieldErrors)
-  throw new Error('Falha ao carregar variáveis de ambiente.')
+/**
+ * Gera uma resposta textual baseada em um prompt.
+ */
+export async function generateAnswer(prompt: string) {
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const result = await model.generateContent(prompt)
+    return result.response.text()
+  } catch (error) {
+    console.error('❌ Erro ao gerar resposta com Gemini:', error)
+    return 'Erro ao gerar resposta com a IA.'
+  }
 }
 
-export const env = parsed.data
+/**
+ * Gera embeddings (vetores numéricos) a partir de um texto.
+ */
+export async function generateEmbeddings(input: string) {
+  try {
+    const model = genAI.getGenerativeModel({ model: 'text-embedding-004' })
+    const result = await model.embedContent(input)
+    return result.embedding.values
+  } catch (error) {
+    console.error('❌ Erro ao gerar embeddings com Gemini:', error)
+    return []
+  }
+}
