@@ -16,14 +16,12 @@ if (!(process.env.DATABASE_URL && process.env.GEMINI_API_KEY)) {
   console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY)
 }
 
-// Faz a validação segura (só depois do check acima)
-export const env = envSchema.safeParse(process.env)
+const parsed = envSchema.safeParse(process.env)
 
-// Em caso de erro, mostra detalhes sem crashar o build
-if (!env.success) {
+if (!parsed.success) {
   console.error('❌ Erro ao validar variáveis de ambiente:')
-  console.error(env.error.flatten().fieldErrors)
+  console.error(parsed.error.flatten().fieldErrors)
   throw new Error('Falha ao carregar variáveis de ambiente.')
 }
 
-export const { PORT, DATABASE_URL, GEMINI_API_KEY } = env.data
+export const env = parsed.data

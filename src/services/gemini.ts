@@ -1,15 +1,15 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
-import { GEMINI_API_KEY } from '../env.js'
+import { env } from '../env.ts'
 
 // Inicializa o cliente Gemini com a chave da API
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY)
+const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY)
 
 /**
  * Gera uma resposta textual baseada em um prompt.
  */
 export async function generateAnswer(prompt: string) {
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
     const result = await model.generateContent(prompt)
     return result.response.text()
   } catch (error) {
