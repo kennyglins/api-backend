@@ -1,20 +1,10 @@
 import { z } from 'zod'
 
-// Esquema de validação das variáveis de ambiente
 const envSchema = z.object({
   PORT: z.coerce.number().default(3333),
   DATABASE_URL: z.string().url().startsWith('postgresql://'),
   GEMINI_API_KEY: z.string(),
 })
-
-// Antes de validar, verifica se realmente existem variáveis
-if (!(process.env.DATABASE_URL && process.env.GEMINI_API_KEY)) {
-  console.warn(
-    '⚠️  Variáveis de ambiente ausentes. Railway pode não ter injetado ainda.'
-  )
-  console.log('DATABASE_URL:', process.env.DATABASE_URL)
-  console.log('GEMINI_API_KEY:', process.env.GEMINI_API_KEY)
-}
 
 const parsed = envSchema.safeParse(process.env)
 
@@ -25,3 +15,4 @@ if (!parsed.success) {
 }
 
 export const env = parsed.data
+export const { PORT, DATABASE_URL, GEMINI_API_KEY } = parsed.data
