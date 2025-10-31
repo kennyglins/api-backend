@@ -31,3 +31,30 @@ export async function generateEmbeddings(input: string) {
     return []
   }
 }
+
+/**
+ * Transcreve um áudio (em base64) para texto usando o modelo Gemini 2.5 Flash.
+ * Ideal para áudios curtos, como mensagens de voz.
+ */
+export async function transcribeAudio(base64Audio: string, mimeType: string) {
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+
+    const result = await model.generateContent([
+      {
+        inlineData: {
+          mimeType,
+          data: base64Audio,
+        },
+      },
+      {
+        text: 'Transcreva o áudio com clareza, pontuação e correção gramatical.',
+      },
+    ])
+
+    return result.response.text()
+  } catch (error) {
+    console.error('❌ Erro ao transcrever áudio com Gemini:', error)
+    return 'Erro ao transcrever áudio.'
+  }
+}
